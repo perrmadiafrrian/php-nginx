@@ -125,11 +125,6 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 COPY default.conf /etc/nginx/conf.d/
 COPY nginx.conf /etc/nginx/
 
-# Additional PHP Config
-RUN /bin/sh -c echo 'memory_limit = 512M' >> /usr/local/etc/php/conf.d/docker-php-memory_limit.ini
-RUN /bin/sh -c echo 'max_execution_time = 10800' >> /usr/local/etc/php/conf.d/docker-php-maxexectime.ini
-RUN /bin/sh -c echo 'post_max_size = 512M' >> /usr/local/etc/php/conf.d/docker-php-post_max_size.ini
-RUN /bin/sh -c echo 'upload_max_filesize = 512M' >> /usr/local/etc/php/conf.d/docker-php-upload_max_filesize.ini
 RUN set -ex \
     && apk --no-cache add \
       postgresql-dev
@@ -139,6 +134,12 @@ RUN set -ex \
       libpng-dev
 RUN docker-php-ext-install pdo pdo_pgsql pdo_mysql mysqli gd
 
+# Additional PHP Config
+RUN echo 'memory_limit = 512M' >> /usr/local/etc/php/conf.d/docker-php-memory_limit.ini
+RUN echo 'max_execution_time = 10800' >> /usr/local/etc/php/conf.d/docker-php-maxexectime.ini
+RUN echo 'post_max_size = 512M' >> /usr/local/etc/php/conf.d/docker-php-post_max_size.ini
+RUN echo 'upload_max_filesize = 512M' >> /usr/local/etc/php/conf.d/docker-php-upload_max_filesize.ini
+RUN echo 'max_file_uploads = 500' >> /usr/local/etc/php/conf.d/docker-php-max_file_uploads.ini
 COPY www.conf /usr/local/etc/php-fpm.d/
 COPY zz-docker.conf /usr/local/etc/php-fpm.d/
 
